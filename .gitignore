@@ -1,0 +1,14 @@
+# Node
+node_modules/
+dist/
+.env
+.vscode/
+
+# Java / Spring
+/target/
+/.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
