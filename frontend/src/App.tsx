@@ -3,14 +3,29 @@ import AppLayout from "./layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import CreateInvoice from "./pages/CreateInvoice";
 import InvoiceDetail from "./pages/InvoiceDetail";
+import Profile from "./pages/Profile";
 import type { Invoice } from "./types/invoice";
 
-type Page = "dashboard" | "create" | "details";
+type Page = "dashboard" | "create" | "details" | "profile";
+
+interface User {
+  name: string;
+  email: string;
+  phone: string;
+  photoUrl?: string;
+}
 
 function App() {
   const [page, setPage] = useState<Page>("dashboard");
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [selectedInvoiceIndex, setSelectedInvoiceIndex] = useState<number | null>(null);
+
+  const [user, setUser] = useState<User>({
+    name: "Freelancer",
+    email: "",
+    phone: "",
+    photoUrl: undefined,
+  });
 
   const handleSaveInvoice = (invoice: Invoice) => {
     setInvoices((prev) => [...prev, invoice]);
@@ -25,8 +40,14 @@ function App() {
     );
   };
 
+  const isVerified = user.phone.trim().length > 0;
+
   return (
-    <AppLayout>
+    <AppLayout
+      userName={user.name}
+      isVerified={isVerified}
+      onProfileClick={() => setPage("profile")}
+    >
       {page === "dashboard" && (
         <Dashboard
           invoices={invoices}
@@ -52,6 +73,23 @@ function App() {
           onBack={() => setPage("dashboard")}
           onMarkPaid={() => {
             markAsPaid(selectedInvoiceIndex);
+            setPage("dashboard");
+          }}
+        />
+      )}
+
+      {page === "profile" && (
+        <Profile
+          name={user.name}
+          email={user.email}
+          phone={user.phone}
+          photoUrl={user.photoUrl}
+          onBack={() => setPage("dashboard")}
+          onSave={(data) => {
+            setUser((prev) => ({
+              ...prev,
+              ...data,
+            }));
             setPage("dashboard");
           }}
         />
