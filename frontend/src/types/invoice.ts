@@ -1,9 +1,10 @@
 export interface Invoice {
-  id?: string; // will come from backend later
+  id?: string;
   clientName: string;
+  clientPhone: string;          // NEW
   description: string;
   amount: number;
-  dueDate: string; // ISO date string (YYYY-MM-DD)
+  dueDate: string;              // YYYY-MM-DD
   status: "PENDING" | "PAID" | "OVERDUE";
-  createdAt?: string; // later from backend
+  createdAt?: string;
 }

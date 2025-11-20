@@ -1,4 +1,6 @@
 import type { Invoice } from "../types/invoice";
+import { downloadInvoicePdf } from "../utils/invoicePdf";
+import { openWhatsAppForInvoice } from "../utils/whatsapp";
 
 interface DashboardProps {
   onCreate: () => void;
@@ -76,6 +78,9 @@ export default function Dashboard({
                 <p className="text-xs text-gray-500">
                   ₹{inv.amount} • Due: {inv.dueDate}
                 </p>
+                <p className="text-xs text-gray-400">
+                  WhatsApp: {inv.clientPhone}
+                </p>
               </div>
 
               <div className="flex flex-col items-end gap-2">
@@ -91,9 +96,32 @@ export default function Dashboard({
                   {inv.status}
                 </span>
 
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      downloadInvoicePdf(inv);
+                    }}
+                    className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded"
+                    title="Download invoice PDF"
+                  >
+                    ⬇ PDF
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      downloadInvoicePdf(inv);
+                      openWhatsAppForInvoice(inv);
+                    }}
+                    className="text-xs bg-green-500 text-white px-2 py-1 rounded"
+                    title="Send via WhatsApp"
+                  >
+                    🟢 WhatsApp
+                  </button>
+                </div>
+
                 <button
                   onClick={() => onViewDetails(index)}
-                  className="text-xs bg-blue-600 text-white px-2 py-1 rounded"
+                  className="text-xs text-blue-600 underline"
                 >
                   View Details
                 </button>

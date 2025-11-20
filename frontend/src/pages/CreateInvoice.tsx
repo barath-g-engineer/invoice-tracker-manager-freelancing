@@ -9,6 +9,7 @@ interface CreateInvoiceProps {
 
 export default function CreateInvoice({ onBack, onSave }: CreateInvoiceProps) {
   const [clientName, setClientName] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -23,8 +24,14 @@ export default function CreateInvoice({ onBack, onSave }: CreateInvoiceProps) {
       return;
     }
 
+    if (!clientPhone.trim()) {
+      alert("Please enter the client's WhatsApp phone number.");
+      return;
+    }
+
     const invoice: Invoice = {
       clientName: clientName.trim(),
+      clientPhone: clientPhone.trim(),
       description: description.trim(),
       amount: numericAmount,
       dueDate,
@@ -34,8 +41,9 @@ export default function CreateInvoice({ onBack, onSave }: CreateInvoiceProps) {
 
     onSave(invoice);
 
-    // Optional: reset form
+    // reset form
     setClientName("");
+    setClientPhone("");
     setDescription("");
     setAmount("");
     setDueDate("");
@@ -65,6 +73,23 @@ export default function CreateInvoice({ onBack, onSave }: CreateInvoiceProps) {
             placeholder="e.g. Rahul Sharma"
             required
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Client WhatsApp Number
+          </label>
+          <input
+            type="tel"
+            value={clientPhone}
+            onChange={(e) => setClientPhone(e.target.value)}
+            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
+            placeholder="+91 98765 43210"
+            required
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Use country code (e.g. +91) so WhatsApp link works correctly.
+          </p>
         </div>
 
         <div>

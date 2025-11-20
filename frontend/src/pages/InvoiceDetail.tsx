@@ -59,6 +59,10 @@ export default function InvoiceDetail({
           <span className="font-medium">Created At:</span>{" "}
           {new Date(invoice.createdAt || "").toLocaleString()}
         </p>
+        <p>
+  <span className="font-medium">Phone:</span> {invoice.clientPhone}
+</p>
+
       </div>
 
       {invoice.status !== "PAID" && (
