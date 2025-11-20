@@ -4,9 +4,10 @@ import type { Invoice } from "../types/invoice";
 
 interface CreateInvoiceProps {
   onBack: () => void;
+  onSave: (invoice: Invoice) => void;
 }
 
-export default function CreateInvoice({ onBack }: CreateInvoiceProps) {
+export default function CreateInvoice({ onBack, onSave }: CreateInvoiceProps) {
   const [clientName, setClientName] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -26,16 +27,12 @@ export default function CreateInvoice({ onBack }: CreateInvoiceProps) {
       clientName: clientName.trim(),
       description: description.trim(),
       amount: numericAmount,
-      dueDate, // already YYYY-MM-DD from input
+      dueDate,
       status: "PENDING",
       createdAt: new Date().toISOString(),
     };
 
-    console.log("%cNew Invoice Created", "color: green; font-weight: bold;");
-    console.log(invoice);
-
-    alert("Invoice object created in frontend (check console).");
-    // later: send `invoice` to backend API
+    onSave(invoice);
 
     // Optional: reset form
     setClientName("");
