@@ -4,9 +4,15 @@ interface DashboardProps {
   onCreate: () => void;
   invoices: Invoice[];
   onMarkPaid: (index: number) => void;
+  onViewDetails: (index: number) => void;
 }
 
-export default function Dashboard({ onCreate, invoices, onMarkPaid }: DashboardProps) {
+export default function Dashboard({
+  onCreate,
+  invoices,
+  onMarkPaid,
+  onViewDetails,
+}: DashboardProps) {
   const totalPending = invoices
     .filter((inv) => inv.status === "PENDING")
     .reduce((sum, inv) => sum + inv.amount, 0);
@@ -15,13 +21,15 @@ export default function Dashboard({ onCreate, invoices, onMarkPaid }: DashboardP
     .filter((inv) => inv.status === "PAID")
     .reduce((sum, inv) => sum + inv.amount, 0);
 
-  const overdueCount = invoices.filter((inv) => inv.status === "OVERDUE").length;
+  const overdueCount = invoices.filter(
+    (inv) => inv.status === "OVERDUE"
+  ).length;
 
   return (
     <div>
       <h2 className="text-lg font-semibold">Dashboard</h2>
 
-      {/* Summary Cards */}
+      {/* Summary cards */}
       <div className="mt-4 space-y-3">
         <div className="p-4 bg-white shadow rounded-lg">
           <p className="text-sm text-gray-500">Total Pending</p>
@@ -39,7 +47,7 @@ export default function Dashboard({ onCreate, invoices, onMarkPaid }: DashboardP
         </div>
       </div>
 
-      {/* Create button */}
+      {/* Create invoice button */}
       <button
         onClick={onCreate}
         className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg font-medium"
@@ -47,12 +55,14 @@ export default function Dashboard({ onCreate, invoices, onMarkPaid }: DashboardP
         + Create Invoice
       </button>
 
-      {/* Invoice list */}
+      {/* List */}
       <div className="mt-6">
         <h3 className="text-md font-semibold mb-2">Recent Invoices</h3>
 
         {invoices.length === 0 && (
-          <p className="text-sm text-gray-500">No invoices yet. Create your first one.</p>
+          <p className="text-sm text-gray-500">
+            No invoices yet. Create your first one.
+          </p>
         )}
 
         <ul className="space-y-2">
@@ -81,6 +91,13 @@ export default function Dashboard({ onCreate, invoices, onMarkPaid }: DashboardP
                   {inv.status}
                 </span>
 
+                <button
+                  onClick={() => onViewDetails(index)}
+                  className="text-xs bg-blue-600 text-white px-2 py-1 rounded"
+                >
+                  View Details
+                </button>
+
                 {inv.status === "PENDING" && (
                   <button
                     onClick={() => onMarkPaid(index)}
@@ -97,4 +114,3 @@ export default function Dashboard({ onCreate, invoices, onMarkPaid }: DashboardP
     </div>
   );
 }
-

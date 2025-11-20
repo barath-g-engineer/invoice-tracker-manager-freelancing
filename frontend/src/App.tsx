@@ -2,11 +2,15 @@ import { useState } from "react";
 import AppLayout from "./layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import CreateInvoice from "./pages/CreateInvoice";
+import InvoiceDetail from "./pages/InvoiceDetail";
 import type { Invoice } from "./types/invoice";
 
+type Page = "dashboard" | "create" | "details";
+
 function App() {
-  const [page, setPage] = useState<"dashboard" | "create-invoice">("dashboard");
+  const [page, setPage] = useState<Page>("dashboard");
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [selectedInvoiceIndex, setSelectedInvoiceIndex] = useState<number | null>(null);
 
   const handleSaveInvoice = (invoice: Invoice) => {
     setInvoices((prev) => [...prev, invoice]);
@@ -26,15 +30,30 @@ function App() {
       {page === "dashboard" && (
         <Dashboard
           invoices={invoices}
-          onCreate={() => setPage("create-invoice")}
+          onCreate={() => setPage("create")}
           onMarkPaid={markAsPaid}
+          onViewDetails={(index) => {
+            setSelectedInvoiceIndex(index);
+            setPage("details");
+          }}
         />
       )}
 
-      {page === "create-invoice" && (
+      {page === "create" && (
         <CreateInvoice
           onBack={() => setPage("dashboard")}
           onSave={handleSaveInvoice}
+        />
+      )}
+
+      {page === "details" && selectedInvoiceIndex !== null && (
+        <InvoiceDetail
+          invoice={invoices[selectedInvoiceIndex]}
+          onBack={() => setPage("dashboard")}
+          onMarkPaid={() => {
+            markAsPaid(selectedInvoiceIndex);
+            setPage("dashboard");
+          }}
         />
       )}
     </AppLayout>
